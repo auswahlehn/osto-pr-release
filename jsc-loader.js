@@ -7,10 +7,12 @@ const vm = require('vm')
 const Module = require('module')
 
 const BUILD = require('./build.json')
+const BIN = path.join(__dirname, 'bytecode', process.versions.v8)
 
 function checkRuntime() {
-	if (process.versions.v8 !== BUILD.v8) {
-		throw new Error(`osto-pr was built for Toolbox's V8 ${BUILD.v8}, this runtime has ${process.versions.v8}. ` +
+	if (!BUILD.runtimes.some(r => r.v8 === process.versions.v8)) {
+		const have = BUILD.runtimes.map(r => `Electron ${r.electron} (V8 ${r.v8})`).join(', ')
+		throw new Error(`osto-pr has builds for ${have}, this runtime is Electron ${process.versions.electron} (V8 ${process.versions.v8}). ` +
 			'Update osto-pr, or ask for a build for this Toolbox version.')
 	}
 }
@@ -23,7 +25,7 @@ function flagHash() {
 
 function load(module, filename) {
 	checkRuntime()
-	const buf = fs.readFileSync(filename)
+	const buf = fs.readFileSync(path.join(BIN, path.relative(__dirname, filename)))
 	v8.setFlagsFromString('--no-lazy')
 	try {
 		flagHash().copy(buf, 12)
