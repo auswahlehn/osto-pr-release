@@ -6,7 +6,7 @@ const v8 = require('v8')
 const vm = require('vm')
 const Module = require('module')
 
-const BUILD = require('./build.json')
+const BUILD = {"runtimes":[{"v8":"8.7.220.29-electron.0","electron":"11.0.5","node":"12.18.3"},{"v8":"8.7.220.31-electron.0","electron":"11.5.0","node":"12.18.3"}]}
 const BIN = path.join(__dirname, 'bytecode', process.versions.v8)
 
 function checkRuntime() {
@@ -25,7 +25,12 @@ function flagHash() {
 
 function load(module, filename) {
 	checkRuntime()
-	const buf = fs.readFileSync(path.join(BIN, path.relative(__dirname, filename)))
+	let buf = null
+	try { buf = fs.readFileSync(path.join(BIN, path.relative(__dirname, filename))) } catch (e) {}
+	if (!buf || buf.length < 16) {
+		throw new Error(`osto-pr is incomplete (${path.relative(__dirname, filename)}): files are missing or mixed with an older copy. ` +
+			'Delete the osto-pr folder and install it again.')
+	}
 	v8.setFlagsFromString('--no-lazy')
 	try {
 		flagHash().copy(buf, 12)
@@ -45,6 +50,16 @@ function load(module, filename) {
 }
 
 v8.setFlagsFromString('--no-flush-bytecode')
-if (!Module._extensions['.jsc']) Module._extensions['.jsc'] = load
+
+const prev = Module._extensions['.jsc']
+const next = prev && prev.ostoRoot === __dirname ? prev.next : prev
+function handler(module, filename) {
+	if (filename.startsWith(__dirname + path.sep)) return load(module, filename)
+	if (next) return next(module, filename)
+	throw new Error(`no loader for ${filename}`)
+}
+handler.ostoRoot = __dirname
+handler.next = next
+Module._extensions['.jsc'] = handler
 
 module.exports = { load }

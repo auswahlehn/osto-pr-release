@@ -1,3 +1,3 @@
 'use strict'
-require('./jsc-loader')
+require('./boot')
 module.exports = require('./main')
