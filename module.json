@@ -2,7 +2,7 @@
     "name": "osto-pr",
     "author": "Initials",
     "description": "Removes skill ping on OSTO: skills start the moment you press them.",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "options": {
         "cliName": "OSTO PR",
         "guiName": "OSTO PR (ping remover)",
@@ -20,8 +20,7 @@
         "ping-remover",
         "ngsp",
         "psp",
-        "ping-compensation",
-        "sp-test"
+        "ping-compensation"
     ],
     "servers": [
         "https://raw.githubusercontent.com/auswahlehn/osto-pr-release/main/"
