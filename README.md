@@ -19,6 +19,7 @@ Do not run it together with another ping remover or skill prediction mod.
 | `pr status` | On/off, ping, and how many skills it played early |
 | `pr ping` | Real ping (hovering the in-game ping gauge shows it too); `pr ping off` gives the gauge back |
 | `pr dry` / `pr live` | Watch only / play skills early (live is the default) |
+| `pr omni on` / `off` | Omnidirectional skills: hold W, A, S, D or an arrow key with Backstep, Fiery Escape, Teleport Jaunt, a charging dash and similar, and the skill goes that way (off by default; no separate omnidirectional mod needed) |
 | `pr lockon on` / `off` | Play lock-on skills early: the targeting, the target locks and the cast (off by default, new and still being tested) |
 | `pr dash on` / `off` | Play targeted dashes early (off by default) |
 | `pr dump` | Save a log to the mod folder for bug reports |
